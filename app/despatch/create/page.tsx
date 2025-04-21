@@ -186,8 +186,16 @@ export default function CreateDespatchPage() {
 
     try {
       const despatchIds = await createOrderDespatch(formData)
+      console.log("Despatch IDs:", despatchIds)
       toast.success("Despatch created successfully", {
-        description: `Despatch ID(s): ${despatchIds.join(", ")}`
+        description: `Despatch ID(s): ${despatchIds.join(", ")}`,
+        action: {
+          label: "Copy",
+          onClick: () => {
+            navigator.clipboard.writeText(despatchIds.join(", "));
+            toast.success("Despatch IDs copied to clipboard!");
+          }
+        },
       })
 
       // Reset form

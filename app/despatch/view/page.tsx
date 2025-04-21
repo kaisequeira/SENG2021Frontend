@@ -19,31 +19,40 @@ export default function ViewDespatchPage() {
   const [despatchId, setDespatchId] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [documentUrl, setDocumentUrl] = useState<string | null>(null)
+  const [documentContent, setDocumentContent] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (!despatchId.trim()) {
       toast.error("Validation Error", {
         description: "Please enter a Despatch ID",
-      })
-      return
+      });
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
-      const url = await getDespatchAdvice(despatchId)
-      setDocumentUrl(url)
+      const url = await getDespatchAdvice(despatchId);
+      setDocumentUrl(url);
+
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Failed to fetch document content");
+      }
+      const text = await response.text();
+      setDocumentContent(text);
     } catch (error) {
       toast.error("Error retrieving despatch advice", {
         description: error instanceof Error ? error.message : "Unknown error occurred",
-      })
-      setDocumentUrl(null)
+      });
+      setDocumentUrl(null);
+      setDocumentContent(null);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="container py-10">
@@ -90,12 +99,10 @@ export default function ViewDespatchPage() {
             <CardContent>
               <div className="flex flex-col items-center justify-center p-6 border rounded-md">
                 <FileText className="h-16 w-16 text-muted-foreground mb-4" />
-                <p className="text-center mb-4">Document URL: {documentUrl}</p>
-                <Button asChild>
-                  <a href={documentUrl} target="_blank" rel="noopener noreferrer">
-                    Open Document
-                  </a>
-                </Button>
+                <p className="text-center mb-4">Document Content:</p>
+                <div className="w-full p-4 bg-gray-100 rounded-md overflow-auto">
+                  <pre className="text-sm whitespace-pre-wrap">{documentContent}</pre>
+                </div>
               </div>
             </CardContent>
           </Card>
