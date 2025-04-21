@@ -1,7 +1,7 @@
 "use client"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { getAllProducts, getProductStatus } from "@/lib/api-service"
+import { getAllDespatchEntries, getAllProducts, getProductStatus } from "@/lib/api-service"
 import { BarChart, LineChart, PieChart, Loader2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
@@ -17,12 +17,22 @@ interface StockStatistics {
 }
 
 /**
+ * Interface for despatch entries
+ */
+interface DespatchEntry {
+  Despatch_ID: string
+  Status: string
+  Issue_Date: string
+}
+
+/**
  * DashboardPage component that displays system statistics and metrics.
  * Shows product counts, recent despatches, and other relevant information.
  */
 export default function DashboardPage() {
   const [productCount, setProductCount] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
+  const [recentDespatches, setRecentDespatches] = useState<DespatchEntry[]>([])
   const [stockStats, setStockStats] = useState<StockStatistics>({
     available: 0,
     pending: 0,
@@ -41,6 +51,10 @@ export default function DashboardPage() {
 
         // Fetch stock statistics for each product
         await fetchStockStatistics(productsData.Products)
+
+        // Fetch recent despatches
+        const despatchEntries = await getAllDespatchEntries()
+        setRecentDespatches(despatchEntries)
       } catch (error) {
         toast.error(error instanceof Error ? error.message : "Unknown error occurred")
       } finally {
@@ -82,14 +96,6 @@ export default function DashboardPage() {
       setStockStats((prev) => ({ ...prev, isLoading: false }))
     }
   }
-
-  // Mock data for recent despatches - we could fetch this from an API in the future
-  const recentDespatches = [
-    { id: "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc012", date: "2025-03-15", status: "Delivered" },
-    { id: "21cf6c48-f1c9-53f1-9edf-ed9d5bffd123", date: "2025-03-14", status: "Pending" },
-    { id: "32dg7d59-g2d0-64g2-0feg-fe0e6cgge234", date: "2025-03-13", status: "Cancelled" },
-    { id: "43eh8e60-h3e1-75h3-1gfh-gf1f7dhhe345", date: "2025-03-12", status: "Delivered" },
-  ]
 
   return (
     <div className="container py-10">
@@ -151,21 +157,21 @@ export default function DashboardPage() {
           <CardContent>
             <div className="space-y-4">
               {recentDespatches.map((despatch) => (
-                <div key={despatch.id} className="flex items-center justify-between">
+                <div key={despatch.Despatch_ID} className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium">{despatch.id}</p>
-                    <p className="text-xs text-muted-foreground">{despatch.date}</p>
+                    <p className="text-sm font-medium">{despatch.Despatch_ID}</p>
+                    <p className="text-xs text-muted-foreground">{new Date(despatch.Issue_Date).toLocaleDateString()}</p>
                   </div>
                   <div
                     className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      despatch.status === "Delivered"
+                      despatch.Status === "Delivered"
                         ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100"
-                        : despatch.status === "Cancelled"
+                        : despatch.Status === "Cancelled"
                           ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100"
                           : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100"
                     }`}
                   >
-                    {despatch.status}
+                    {despatch.Status}
                   </div>
                 </div>
               ))}

@@ -428,3 +428,27 @@ export async function deleteProduct(productId: number): Promise<string> {
     throw error
   }
 }
+
+/**
+ * Retrieves all despatch entries
+ * @returns Promise with despatch entries or error
+ */
+export async function getAllDespatchEntries(): Promise<{ Despatch_ID: string; Status: string; Issue_Date: string }[]> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/despatch-ids`, {
+      method: "GET",
+      headers: getAuthHeaders(),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Failed to retrieve despatch entries");
+    }
+
+    const data = await response.json();
+    return data.Despatch_IDs;
+  } catch (error) {
+    console.error("Error retrieving despatch entries:", error);
+    throw error;
+  }
+}
