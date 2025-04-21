@@ -32,6 +32,7 @@ interface DespatchEntry {
 export default function DashboardPage() {
   const [productCount, setProductCount] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
+  const [isDespatchLoading, setIsDespatchLoading] = useState(true)
   const [recentDespatches, setRecentDespatches] = useState<DespatchEntry[]>([])
   const [stockStats, setStockStats] = useState<StockStatistics>({
     available: 0,
@@ -59,6 +60,7 @@ export default function DashboardPage() {
         toast.error(error instanceof Error ? error.message : "Unknown error occurred")
       } finally {
         setIsLoading(false)
+        setIsDespatchLoading(false)
       }
     }
 
@@ -151,36 +153,6 @@ export default function DashboardPage() {
       <div className="grid gap-4 md:grid-cols-2">
         <Card className="col-span-1">
           <CardHeader>
-            <CardTitle>Recent Despatches</CardTitle>
-            <CardDescription>Latest despatch activities</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentDespatches.map((despatch) => (
-                <div key={despatch.Despatch_ID} className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium">{despatch.Despatch_ID}</p>
-                    <p className="text-xs text-muted-foreground">{new Date(despatch.Issue_Date).toLocaleDateString()}</p>
-                  </div>
-                  <div
-                    className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      despatch.Status === "Delivered"
-                        ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100"
-                        : despatch.Status === "Cancelled"
-                          ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100"
-                          : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100"
-                    }`}
-                  >
-                    {despatch.Status}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="col-span-1">
-          <CardHeader>
             <CardTitle>Stock Overview</CardTitle>
             <CardDescription>Current inventory status</CardDescription>
           </CardHeader>
@@ -237,6 +209,42 @@ export default function DashboardPage() {
                 </div>
               </div>
             )}
+          </CardContent>
+        </Card>
+
+        <Card className="col-span-1">
+          <CardHeader>
+            <CardTitle>Recent Despatches</CardTitle>
+            <CardDescription>Latest despatch activities</CardDescription>
+          </CardHeader>
+          <CardContent>
+          {isDespatchLoading ? (
+              <div className="flex justify-center items-center py-8">
+                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              </div>
+            ) : (
+            <div className="space-y-4">
+              {recentDespatches.map((despatch) => (
+                <div key={despatch.Despatch_ID} className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium">{despatch.Despatch_ID}</p>
+                    <p className="text-xs text-muted-foreground">{new Date(despatch.Issue_Date).toLocaleDateString()}</p>
+                  </div>
+                  <div
+                    className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      despatch.Status === "Delivered"
+                        ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100"
+                        : despatch.Status === "Cancelled"
+                          ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100"
+                          : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100"
+                    }`}
+                  >
+                    {despatch.Status}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
           </CardContent>
         </Card>
       </div>
