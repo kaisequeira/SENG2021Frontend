@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
-import { useToast } from "@/components/ui/use-toast"
+import { toast } from "sonner"
 import { createOrderDespatch, getAllProducts } from "@/lib/api-service"
 import { CalendarIcon, Loader2, Plus, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
@@ -22,7 +22,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
  * Allows users to enter customer information, order details, and select products.
  */
 export default function CreateDespatchPage() {
-  const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
   const [products, setProducts] = useState<{ Product_ID: number; Product_Name: string }[]>([])
   const [date, setDate] = useState<Date>(new Date())
@@ -56,9 +55,7 @@ export default function CreateDespatchPage() {
         const data = await getAllProducts()
         setProducts(data.Products)
       } catch (error) {
-        toast({
-          variant: "destructive",
-          title: "Error fetching products",
+        toast.error("Failed to fetch products", {
           description: error instanceof Error ? error.message : "Unknown error occurred",
         })
       }
@@ -151,9 +148,7 @@ export default function CreateDespatchPage() {
 
     // Validate form
     if (!formData.Contact_Information.Email || !formData.Contact_Information.Phone) {
-      toast({
-        variant: "destructive",
-        title: "Validation Error",
+      toast.error("Please fill in all required contact information fields", {
         description: "Please fill in all required contact information fields",
       })
       return
@@ -165,18 +160,14 @@ export default function CreateDespatchPage() {
       !formData.Contact_Information.Address.Postal_Code ||
       !formData.Contact_Information.Address.Country
     ) {
-      toast({
-        variant: "destructive",
-        title: "Validation Error",
+      toast.error("Validation Error", {
         description: "Please fill in all required address fields",
       })
       return
     }
 
     if (!formData.Order_Details.Order_ID || !formData.Order_Details.Sales_Order_ID) {
-      toast({
-        variant: "destructive",
-        title: "Validation Error",
+      toast.error("Validation Error", {
         description: "Please fill in all required order details",
       })
       return
@@ -185,9 +176,7 @@ export default function CreateDespatchPage() {
     // Validate products
     const invalidProducts = formData.Products.some((p) => p.Product_ID === 0 || p.Quantity < 1)
     if (invalidProducts) {
-      toast({
-        variant: "destructive",
-        title: "Validation Error",
+      toast.error("Validation Error", {
         description: "Please select valid products and quantities",
       })
       return
@@ -197,10 +186,8 @@ export default function CreateDespatchPage() {
 
     try {
       const despatchIds = await createOrderDespatch(formData)
-
-      toast({
-        title: "Despatch Created",
-        description: `Successfully created despatch with ID(s): ${despatchIds.join(", ")}`,
+      toast.success("Despatch created successfully", {
+        description: `Despatch ID(s): ${despatchIds.join(", ")}`
       })
 
       // Reset form
@@ -225,10 +212,8 @@ export default function CreateDespatchPage() {
         Products: [{ Product_ID: 0, Quantity: 1 }],
       })
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error creating despatch",
-        description: error instanceof Error ? error.message : "Unknown error occurred",
+      toast.error("Failed to create despatch", {
+        description: error instanceof Error ? error.message : "Unknown error occurred"
       })
     } finally {
       setIsLoading(false)
