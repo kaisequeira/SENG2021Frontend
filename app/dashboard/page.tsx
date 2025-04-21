@@ -1,10 +1,10 @@
 "use client"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { useToast } from "@/components/ui/use-toast"
 import { getAllProducts, getProductStatus } from "@/lib/api-service"
 import { BarChart, LineChart, PieChart, Loader2 } from "lucide-react"
 import { useEffect, useState } from "react"
+import { toast } from "sonner"
 
 /**
  * Interface for stock statistics
@@ -21,7 +21,6 @@ interface StockStatistics {
  * Shows product counts, recent despatches, and other relevant information.
  */
 export default function DashboardPage() {
-  const { toast } = useToast()
   const [productCount, setProductCount] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [stockStats, setStockStats] = useState<StockStatistics>({
@@ -43,18 +42,14 @@ export default function DashboardPage() {
         // Fetch stock statistics for each product
         await fetchStockStatistics(productsData.Products)
       } catch (error) {
-        toast({
-          variant: "destructive",
-          title: "Error fetching dashboard data",
-          description: error instanceof Error ? error.message : "Unknown error occurred",
-        })
+        toast.error(error instanceof Error ? error.message : "Unknown error occurred")
       } finally {
         setIsLoading(false)
       }
     }
 
     fetchData()
-  }, [toast])
+  }, [])
 
   /**
    * Fetches stock statistics for all products and calculates totals
@@ -83,11 +78,7 @@ export default function DashboardPage() {
         isLoading: false,
       })
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error fetching stock statistics",
-        description: error instanceof Error ? error.message : "Unknown error occurred",
-      })
+      toast.error(error instanceof Error ? error.message : "Unknown error occurred")
       setStockStats((prev) => ({ ...prev, isLoading: false }))
     }
   }
@@ -246,4 +237,3 @@ export default function DashboardPage() {
     </div>
   )
 }
-

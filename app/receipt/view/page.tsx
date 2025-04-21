@@ -6,17 +6,16 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useToast } from "@/components/ui/use-toast"
 import { getReceiptAdvice } from "@/lib/api-service"
 import { FileText, Loader2 } from "lucide-react"
 import { useState } from "react"
+import { toast } from "sonner"
 
 /**
  * ViewReceiptPage component for viewing receipt advice documents.
  * Allows users to enter a despatch ID and view the corresponding receipt.
  */
 export default function ViewReceiptPage() {
-  const { toast } = useToast()
   const [despatchId, setDespatchId] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [documentUrl, setDocumentUrl] = useState<string | null>(null)
@@ -25,11 +24,7 @@ export default function ViewReceiptPage() {
     e.preventDefault()
 
     if (!despatchId.trim()) {
-      toast({
-        variant: "destructive",
-        title: "Validation Error",
-        description: "Please enter a Despatch ID",
-      })
+      toast.error("Please enter a Despatch ID")
       return
     }
 
@@ -39,11 +34,7 @@ export default function ViewReceiptPage() {
       const url = await getReceiptAdvice(despatchId)
       setDocumentUrl(url)
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error retrieving receipt advice",
-        description: error instanceof Error ? error.message : "Unknown error occurred",
-      })
+      toast.error(error instanceof Error ? error.message : "Unknown error occurred")
       setDocumentUrl(null)
     } finally {
       setIsLoading(false)
@@ -109,4 +100,3 @@ export default function ViewReceiptPage() {
     </div>
   )
 }
-
