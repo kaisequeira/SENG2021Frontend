@@ -3,8 +3,28 @@
  * Provides methods for all API endpoints defined in the backend implementation.
  */
 
+import { getAuthToken } from "./auth"
+
 // Get the API base URL from environment variables
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000"
+
+/**
+ * Helper function to add authentication headers to requests
+ * @param headers - Optional existing headers
+ * @returns Headers with authentication token
+ */
+function getAuthHeaders(headers: HeadersInit = {}): HeadersInit {
+  const token = getAuthToken()
+
+  if (token) {
+    return {
+      ...headers,
+      Authorization: `Bearer ${token}`,
+    }
+  }
+
+  return headers
+}
 
 /**
  * Interface for contact information address
@@ -113,9 +133,9 @@ export async function createOrderDespatch(orderDespatchData: OrderDespatchReques
   try {
     const response = await fetch(`${API_BASE_URL}/order-despatch`, {
       method: "POST",
-      headers: {
+      headers: getAuthHeaders({
         "Content-Type": "application/json",
-      },
+      }),
       body: JSON.stringify(orderDespatchData),
     })
 
@@ -142,9 +162,9 @@ export async function createDespatchCancellation(despatchId: string, reason: str
   try {
     const response = await fetch(`${API_BASE_URL}/despatch-cancellation`, {
       method: "POST",
-      headers: {
+      headers: getAuthHeaders({
         "Content-Type": "application/json",
-      },
+      }),
       body: JSON.stringify({
         Despatch_ID: despatchId,
         Reason: reason,
@@ -168,7 +188,9 @@ export async function createDespatchCancellation(despatchId: string, reason: str
  */
 export async function getProductStatus(productId: number): Promise<ProductStatusResponse> {
   try {
-    const response = await fetch(`${API_BASE_URL}/product-status?Product_ID=${productId}`)
+    const response = await fetch(`${API_BASE_URL}/product-status?Product_ID=${productId}`, {
+      headers: getAuthHeaders(),
+    })
 
     if (!response.ok) {
       const errorData = await response.json()
@@ -188,7 +210,9 @@ export async function getProductStatus(productId: number): Promise<ProductStatus
  */
 export async function getAllProducts(): Promise<AllProductsResponse> {
   try {
-    const response = await fetch(`${API_BASE_URL}/products-all`)
+    const response = await fetch(`${API_BASE_URL}/products-all`, {
+      headers: getAuthHeaders(),
+    })
 
     if (!response.ok) {
       const errorData = await response.json()
@@ -209,7 +233,9 @@ export async function getAllProducts(): Promise<AllProductsResponse> {
  */
 export async function getReceiptAdvice(despatchId: string): Promise<string> {
   try {
-    const response = await fetch(`${API_BASE_URL}/receipt-advice?Despatch_ID=${despatchId}`)
+    const response = await fetch(`${API_BASE_URL}/receipt-advice?Despatch_ID=${despatchId}`, {
+      headers: getAuthHeaders(),
+    })
 
     if (!response.ok) {
       const errorData = await response.json()
@@ -231,7 +257,9 @@ export async function getReceiptAdvice(despatchId: string): Promise<string> {
  */
 export async function getDespatchCancellation(despatchId: string): Promise<string> {
   try {
-    const response = await fetch(`${API_BASE_URL}/despatch-cancellation?Despatch_ID=${despatchId}`)
+    const response = await fetch(`${API_BASE_URL}/despatch-cancellation?Despatch_ID=${despatchId}`, {
+      headers: getAuthHeaders(),
+    })
 
     if (!response.ok) {
       const errorData = await response.json()
@@ -253,7 +281,9 @@ export async function getDespatchCancellation(despatchId: string): Promise<strin
  */
 export async function getDespatchAdvice(despatchId: string): Promise<string> {
   try {
-    const response = await fetch(`${API_BASE_URL}/despatch-advice?Despatch_ID=${despatchId}`)
+    const response = await fetch(`${API_BASE_URL}/despatch-advice?Despatch_ID=${despatchId}`, {
+      headers: getAuthHeaders(),
+    })
 
     if (!response.ok) {
       const errorData = await response.json()
@@ -277,9 +307,9 @@ export async function sendDespatch(despatchId: string): Promise<string> {
   try {
     const response = await fetch(`${API_BASE_URL}/send-despatch`, {
       method: "PUT",
-      headers: {
+      headers: getAuthHeaders({
         "Content-Type": "application/json",
-      },
+      }),
       body: JSON.stringify({
         Despatch_ID: despatchId,
       }),
@@ -308,9 +338,9 @@ export async function addProductStock(productId: number, quantity: number): Prom
   try {
     const response = await fetch(`${API_BASE_URL}/product-add`, {
       method: "PUT",
-      headers: {
+      headers: getAuthHeaders({
         "Content-Type": "application/json",
-      },
+      }),
       body: JSON.stringify({
         Product_ID: productId,
         Quantity: quantity,
@@ -348,9 +378,9 @@ export async function createProduct(productData: CreateProductRequest): Promise<
 
     const response = await fetch(`${API_BASE_URL}/product-create`, {
       method: "POST",
-      headers: {
+      headers: getAuthHeaders({
         "Content-Type": "application/json",
-      },
+      }),
       body: JSON.stringify({
         Product_Name: transformedProductData.Product_Name,
         Product_Details: transformedProductData.Product_Details,
@@ -379,9 +409,9 @@ export async function deleteProduct(productId: number): Promise<string> {
   try {
     const response = await fetch(`${API_BASE_URL}/product-delete`, {
       method: "DELETE",
-      headers: {
+      headers: getAuthHeaders({
         "Content-Type": "application/json",
-      },
+      }),
       body: JSON.stringify({
         Product_ID: productId,
       }),
@@ -398,4 +428,3 @@ export async function deleteProduct(productId: number): Promise<string> {
     throw error
   }
 }
-

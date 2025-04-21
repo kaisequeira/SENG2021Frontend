@@ -7,17 +7,16 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { useToast } from "@/components/ui/use-toast"
 import { createDespatchCancellation } from "@/lib/api-service"
 import { Loader2 } from "lucide-react"
 import { useState } from "react"
+import { toast } from "sonner"
 
 /**
  * CreateCancellationPage component for creating despatch cancellations.
  * Allows users to enter a despatch ID and reason for cancellation.
  */
 export default function CreateCancellationPage() {
-  const { toast } = useToast()
   const [despatchId, setDespatchId] = useState("")
   const [reason, setReason] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -26,20 +25,12 @@ export default function CreateCancellationPage() {
     e.preventDefault()
 
     if (!despatchId.trim()) {
-      toast({
-        variant: "destructive",
-        title: "Validation Error",
-        description: "Please enter a Despatch ID",
-      })
+      toast.error("Please enter a Despatch ID")
       return
     }
 
     if (!reason.trim()) {
-      toast({
-        variant: "destructive",
-        title: "Validation Error",
-        description: "Please enter a reason for cancellation",
-      })
+      toast.error("Please enter a reason for cancellation")
       return
     }
 
@@ -48,20 +39,13 @@ export default function CreateCancellationPage() {
     try {
       await createDespatchCancellation(despatchId, reason)
 
-      toast({
-        title: "Cancellation Created",
-        description: "Successfully created despatch cancellation",
-      })
+      toast.success("Successfully created despatch cancellation")
 
       // Reset form
       setDespatchId("")
       setReason("")
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error creating cancellation",
-        description: error instanceof Error ? error.message : "Unknown error occurred",
-      })
+      toast.error(error instanceof Error ? error.message : "Unknown error occurred")
     } finally {
       setIsLoading(false)
     }
@@ -112,4 +96,3 @@ export default function CreateCancellationPage() {
     </div>
   )
 }
-
