@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { useToast } from "@/components/ui/use-toast"
+import { toast } from "sonner"
 import { deleteProduct, getAllProducts, getProductStatus } from "@/lib/api-service"
 import { AlertCircle, Loader2, Package, Plus, RefreshCw, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
@@ -62,7 +62,6 @@ interface ProductDetails {
  * Displays a list of products and allows viewing details, adding stock, and deleting products.
  */
 export default function ProductsPage() {
-  const { toast } = useToast()
   const [products, setProducts] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -87,9 +86,7 @@ export default function ProductsPage() {
       setProducts(data.Products)
     } catch (error) {
       setError(error instanceof Error ? error.message : "Failed to fetch products")
-      toast({
-        variant: "destructive",
-        title: "Error fetching products",
+      toast.error("Error fetching products", {
         description: error instanceof Error ? error.message : "Unknown error occurred",
       })
     } finally {
@@ -104,9 +101,7 @@ export default function ProductsPage() {
       setSelectedProduct(details)
       setIsDetailsOpen(true)
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error fetching product details",
+      toast.error("Error fetching product details", {
         description: error instanceof Error ? error.message : "Unknown error occurred",
       })
     }
@@ -121,17 +116,14 @@ export default function ProductsPage() {
     try {
       await deleteProduct(productToDelete.Product_ID)
 
-      toast({
-        title: "Product Deleted",
+      toast.error("Product Deleted", {
         description: `Successfully deleted product: ${productToDelete.Product_Name}`,
       })
 
       // Refresh product list
       fetchProducts()
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error deleting product",
+      toast.error("Error deleting product", {
         description: error instanceof Error ? error.message : "Unknown error occurred",
       })
     } finally {

@@ -102,7 +102,7 @@ export default function DashboardPage() {
             <BarChart className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{isLoading ? "Loading..." : productCount}</div>
+            <div className="text-2xl font-bold">{isLoading ? (<Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />) : (productCount)}</div>
             <p className="text-xs text-muted-foreground">Products in inventory</p>
           </CardContent>
         </Card>

@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { useToast } from "@/components/ui/use-toast"
+import { toast } from "sonner"
 import { createProduct } from "@/lib/api-service"
 import { CalendarIcon, Loader2 } from "lucide-react"
 import { useState } from "react"
@@ -21,7 +21,6 @@ import { format } from "date-fns"
  * Allows users to enter product details and create a new product.
  */
 export default function CreateProductPage() {
-  const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
   const [date, setDate] = useState<Date | undefined>(undefined)
 
@@ -71,9 +70,7 @@ export default function CreateProductPage() {
     e.preventDefault()
 
     if (!formData.Product_Name.trim()) {
-      toast({
-        variant: "destructive",
-        title: "Validation Error",
+      toast.error("Validation Error", {
         description: "Product name is required",
       })
       return
@@ -84,8 +81,7 @@ export default function CreateProductPage() {
     try {
       const productId = await createProduct(formData)
 
-      toast({
-        title: "Product Created",
+      toast.success("Product Created", {
         description: `Successfully created product with ID: ${productId}`,
       })
 
@@ -103,9 +99,7 @@ export default function CreateProductPage() {
       })
       setDate(undefined)
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error creating product",
+      toast.error("Error creating product", {
         description: error instanceof Error ? error.message : "Unknown error occurred",
       })
     } finally {

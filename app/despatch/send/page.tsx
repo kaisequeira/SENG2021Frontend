@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useToast } from "@/components/ui/use-toast"
+import { toast } from "sonner"
 import { sendDespatch } from "@/lib/api-service"
 import { Loader2, Send } from "lucide-react"
 import { useState } from "react"
@@ -16,7 +16,6 @@ import { useState } from "react"
  * Allows users to enter a despatch ID and mark it as sent.
  */
 export default function SendDespatchPage() {
-  const { toast } = useToast()
   const [despatchId, setDespatchId] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
@@ -24,9 +23,7 @@ export default function SendDespatchPage() {
     e.preventDefault()
 
     if (!despatchId.trim()) {
-      toast({
-        variant: "destructive",
-        title: "Validation Error",
+      toast.error("Validation Error", {
         description: "Please enter a Despatch ID",
       })
       return
@@ -37,17 +34,14 @@ export default function SendDespatchPage() {
     try {
       const result = await sendDespatch(despatchId)
 
-      toast({
-        title: "Despatch Sent",
+      toast.success("Despatch Sent", {
         description: result,
       })
 
       // Reset form
       setDespatchId("")
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error sending despatch",
+      toast.error("Error sending despatch", {
         description: error instanceof Error ? error.message : "Unknown error occurred",
       })
     } finally {

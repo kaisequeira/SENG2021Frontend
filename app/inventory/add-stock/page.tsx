@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useToast } from "@/components/ui/use-toast"
+import { toast } from "sonner"
 import { addProductStock, getAllProducts, getProductStatus } from "@/lib/api-service"
 import { Loader2 } from "lucide-react"
 import { useSearchParams } from "next/navigation"
@@ -18,7 +18,6 @@ import { useEffect, useState } from "react"
  * Allows users to select a product and add a quantity of stock.
  */
 export default function AddStockPage() {
-  const { toast } = useToast()
   const searchParams = useSearchParams()
   const [products, setProducts] = useState<{ Product_ID: number; Product_Name: string }[]>([])
   const [selectedProductId, setSelectedProductId] = useState<string>("")
@@ -42,9 +41,7 @@ export default function AddStockPage() {
           fetchProductDetails(Number.parseInt(productId))
         }
       } catch (error) {
-        toast({
-          variant: "destructive",
-          title: "Error fetching products",
+        toast.error("Error fetching products", {
           description: error instanceof Error ? error.message : "Unknown error occurred",
         })
       } finally {
@@ -63,9 +60,7 @@ export default function AddStockPage() {
       const details = await getProductStatus(productId)
       setProductDetails(details)
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error fetching product details",
+      toast.error("Error fetching product details", {
         description: error instanceof Error ? error.message : "Unknown error occurred",
       })
     }
@@ -82,18 +77,14 @@ export default function AddStockPage() {
     e.preventDefault()
 
     if (!selectedProductId) {
-      toast({
-        variant: "destructive",
-        title: "Validation Error",
+      toast.error("Validation Error", {
         description: "Please select a product",
       })
       return
     }
 
     if (quantity < 1) {
-      toast({
-        variant: "destructive",
-        title: "Validation Error",
+      toast.error("Validation Error", {
         description: "Quantity must be at least 1",
       })
       return
@@ -104,8 +95,7 @@ export default function AddStockPage() {
     try {
       const result = await addProductStock(Number.parseInt(selectedProductId), quantity)
 
-      toast({
-        title: "Stock Added",
+      toast.success("Stock Added", {
         description: result,
       })
 
@@ -115,9 +105,7 @@ export default function AddStockPage() {
       // Reset quantity
       setQuantity(1)
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error adding stock",
+      toast.error("Error adding stock", {
         description: error instanceof Error ? error.message : "Unknown error occurred",
       })
     } finally {
