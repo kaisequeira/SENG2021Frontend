@@ -100,8 +100,8 @@ export default function ViewDespatchPage() {
               <div className="flex flex-col items-center justify-center p-6 border rounded-md">
                 <FileText className="h-16 w-16 text-muted-foreground mb-4" />
                 <p className="text-center mb-4">Document Content:</p>
-                <div className="w-full p-4 bg-gray-100 rounded-md overflow-auto">
-                  <pre className="text-sm whitespace-pre-wrap">{documentContent}</pre>
+                <div className="w-full p-4 bg-background rounded-md overflow-auto">
+                  <pre className="text-sm whitespace-pre-wrap text-muted-foreground border rounded-lg">{documentContent}</pre>
                 </div>
               </div>
             </CardContent>
