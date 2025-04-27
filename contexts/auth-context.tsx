@@ -53,6 +53,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       toast.success("Logged out successfully")
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to logout")
+      removeAuthToken()
+      setIsAuth(false)
+      router.push("/login")
     } finally {
       setIsLoading(false)
     }
