@@ -48,7 +48,17 @@ export default function SendDespatchPage() {
         }
         const text = await response.text();
         const invoice = mapDespatchAdviceToInvoice(text)
-        await createInvoice(invoice);
+        const invoiceId = await createInvoice(invoice);
+        toast.success("Invoice Created", {
+          description: `Invoice ID: ${invoiceId}`,
+          action: {
+            label: "Copy",
+            onClick: () => {
+              navigator.clipboard.writeText(invoiceId);
+              toast.success("Invoice ID copied to clipboard!");
+            }
+          },
+        })
       } catch (error) {
         toast.error("Error creating invoice", {
           description: error instanceof Error ? error.message : "Unknown error occurred",
