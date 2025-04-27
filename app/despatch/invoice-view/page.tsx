@@ -53,7 +53,7 @@ export default function ViewDespatchPage() {
         <Card>
           <CardHeader>
             <CardTitle>Retrieve Invoice</CardTitle>
-            <CardDescription>Enter the Invoice ID to view the corresponding document</CardDescription>
+            <CardDescription>Enter the Invoice ID to view the corresponding document. Note: This feature is courtesy of the SUSHI SENG2021 API, although requires sending a despatch before an invoice can be generated and, thus, retrieved. In addition, you must disable the Insecure Content setting if you are in chrome to allow access to SUSHI's API</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
