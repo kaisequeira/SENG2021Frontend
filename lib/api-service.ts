@@ -148,7 +148,11 @@ export async function createOrderDespatch(orderDespatchData: OrderDespatchReques
     return data.Despatch_IDs
   } catch (error) {
     console.error("Error creating order despatch:", error)
-    throw error
+    if (error instanceof Error && error.message.includes("jwt expired")) {
+      throw new Error("Session expired. Please log in again.")
+    } else {
+      throw error
+    }
   }
 }
 
@@ -177,7 +181,11 @@ export async function createDespatchCancellation(despatchId: string, reason: str
     }
   } catch (error) {
     console.error("Error creating despatch cancellation:", error)
-    throw error
+    if (error instanceof Error && error.message.includes("jwt expired")) {
+      throw new Error("Session expired. Please log in again.")
+    } else {
+      throw error
+    }
   }
 }
 
@@ -200,7 +208,11 @@ export async function getProductStatus(productId: number): Promise<ProductStatus
     return await response.json()
   } catch (error) {
     console.error("Error getting product status:", error)
-    throw error
+    if (error instanceof Error && error.message.includes("jwt expired")) {
+      throw new Error("Session expired. Please log in again.")
+    } else {
+      throw error
+    }
   }
 }
 
@@ -222,7 +234,11 @@ export async function getAllProducts(): Promise<AllProductsResponse> {
     return await response.json()
   } catch (error) {
     console.error("Error getting all products:", error)
-    throw error
+    if (error instanceof Error && error.message.includes("jwt expired")) {
+      throw new Error("Session expired. Please log in again.")
+    } else {
+      throw error
+    }
   }
 }
 
@@ -246,7 +262,11 @@ export async function getReceiptAdvice(despatchId: string): Promise<string> {
     return data.Receipt_Advice_URL
   } catch (error) {
     console.error("Error getting receipt advice:", error)
-    throw error
+    if (error instanceof Error && error.message.includes("jwt expired")) {
+      throw new Error("Session expired. Please log in again.")
+    } else {
+      throw error
+    }
   }
 }
 
@@ -270,7 +290,11 @@ export async function getDespatchCancellation(despatchId: string): Promise<strin
     return data.Cancellation_URL
   } catch (error) {
     console.error("Error getting despatch cancellation:", error)
-    throw error
+    if (error instanceof Error && error.message.includes("jwt expired")) {
+      throw new Error("Session expired. Please log in again.")
+    } else {
+      throw error
+    }
   }
 }
 
@@ -294,7 +318,11 @@ export async function getDespatchAdvice(despatchId: string): Promise<string> {
     return data.Despatch_Advice_URL
   } catch (error) {
     console.error("Error getting despatch advice:", error)
-    throw error
+    if (error instanceof Error && error.message.includes("jwt expired")) {
+      throw new Error("Session expired. Please log in again.")
+    } else {
+      throw error
+    }
   }
 }
 
@@ -324,7 +352,11 @@ export async function sendDespatch(despatchId: string): Promise<string> {
     return data.message
   } catch (error) {
     console.error("Error sending despatch:", error)
-    throw error
+    if (error instanceof Error && error.message.includes("jwt expired")) {
+      throw new Error("Session expired. Please log in again.")
+    } else {
+      throw error
+    }
   }
 }
 
@@ -355,7 +387,11 @@ export async function addProductStock(productId: number, quantity: number): Prom
     return "Stock updated successfully"
   } catch (error) {
     console.error("Error adding product stock:", error)
-    throw error
+    if (error instanceof Error && error.message.includes("jwt expired")) {
+      throw new Error("Session expired. Please log in again.")
+    } else {
+      throw error
+    }
   }
 }
 
@@ -396,7 +432,11 @@ export async function createProduct(productData: CreateProductRequest): Promise<
     return data.Product_ID
   } catch (error) {
     console.error("Error creating product:", error)
-    throw error
+    if (error instanceof Error && error.message.includes("jwt expired")) {
+      throw new Error("Session expired. Please log in again.")
+    } else {
+      throw error
+    }
   }
 }
 
@@ -425,7 +465,11 @@ export async function deleteProduct(productId: number): Promise<string> {
     return "Product deleted successfully"
   } catch (error) {
     console.error("Error deleting product:", error)
-    throw error
+    if (error instanceof Error && error.message.includes("jwt expired")) {
+      throw new Error("Session expired. Please log in again.")
+    } else {
+      throw error
+    }
   }
 }
 
@@ -449,6 +493,10 @@ export async function getAllDespatchEntries(): Promise<{ Despatch_ID: string; St
     return data.Despatch_IDs;
   } catch (error) {
     console.error("Error retrieving despatch entries:", error);
-    throw error;
+    if (error instanceof Error && error.message.includes("jwt expired")) {
+      throw new Error("Session expired. Please log in again.")
+    } else {
+      throw error
+    }
   }
 }
