@@ -1,8 +1,8 @@
 import { getInvoiceApiToken } from "./auth"
-import { Invoice } from "./invoice_utils"
+import { Invoice } from "./invoice-utils"
 
 // Get the Invoice API base URL from environment variables
-const INVOICE_API_BASE_URL = "http://sushi-invoice-application.ap-southeast-2.elasticbeanstalk.com/"
+const INVOICE_API_BASE_URL = "http://sushi-invoice-application.ap-southeast-2.elasticbeanstalk.com"
 
 /**
  * Interface for authentication token response
@@ -43,7 +43,7 @@ export async function loginToInvoiceApi(): Promise<AuthTokenResponse> {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: "parchives2000@gmail.com",
+          email: "crunchie@gmail.com",
           password: "Password1@",
         }),
       })
@@ -75,10 +75,37 @@ export async function createInvoice(invoice: Invoice): Promise<string> {
             },
             body: JSON.stringify(invoice),
         })
-    
+
         if (!response.ok) {
             const errorData = await response.json()
             throw new Error(errorData.error || "Failed to create invoice")
+        }
+
+        return await response.json()
+    } catch (error) {
+        console.error("Error creating invoice:", error)
+        throw error
+    }
+}
+
+/**
+ * Retrieve an invoice from the SUSHI API
+ * @param invoiceId - The invoice ID
+ * @returns Promise with invoice ID or error
+ */
+export async function retrieveInvoice(invoiceId: string): Promise<string> {
+    try {  
+        const response = await fetch(`${INVOICE_API_BASE_URL}/v1/invoices/${invoiceId}`, {
+            method: "GET",
+            headers: {
+            "Content-Type": "application/json",
+            ...getInvoiceAuthHeaders(),
+            },
+        })
+    
+        if (!response.ok) {
+            const errorData = await response.json()
+            throw new Error(errorData.error || "Failed to retrieve invoice")
         }
     
         return await response.json()
@@ -86,4 +113,4 @@ export async function createInvoice(invoice: Invoice): Promise<string> {
         console.error("Error creating invoice:", error)
         throw error
     }
-  }
+}
