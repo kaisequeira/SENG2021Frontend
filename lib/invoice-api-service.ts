@@ -81,7 +81,7 @@ export async function createInvoice(invoice: Invoice): Promise<string> {
             throw new Error(errorData.error || "Failed to create invoice")
         }
 
-        return await response.json()
+        return (await response.json()).data.invoiceId
     } catch (error) {
         console.error("Error creating invoice:", error)
         throw error
