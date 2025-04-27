@@ -9,20 +9,12 @@ export interface InvoiceItem {
     name: string;
     count: number;
     cost: number;
-  }
-  
-  /**
-   * Interface for an address
-   */
-  export interface Address {
-    street: string;
-    country: string;
-  }
+}
   
   /**
    * Interface for an invoice
    */
-  export interface Invoice {
+export interface Invoice {
     invoiceId: string;
     supplier: string;
     buyer: string;
@@ -30,7 +22,6 @@ export interface InvoiceItem {
     currency: string;
     issueDate: string;
     items: InvoiceItem[];
-    buyerAddress?: Address;
     buyerEmail?: string;
     buyerPhone?: string;
   }
@@ -62,10 +53,6 @@ export function mapDespatchAdviceToInvoice(xmlString: string): Invoice {
             currency: "AUD",
             issueDate: despatchData.issueDate,
             items: despatchData.items,
-            buyerAddress: {
-            street: `${despatchData.buildingNumber ? despatchData.buildingNumber + ' ' : ''}${despatchData.street}`,
-            country: despatchData.country
-            },
             buyerEmail: despatchData.email,
             buyerPhone: despatchData.phone,
         };
