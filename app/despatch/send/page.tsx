@@ -60,6 +60,7 @@ export default function SendDespatchPage() {
           },
         })
       } catch (error) {
+        console.error("Error creating invoice:", error);
         toast.error("Error creating invoice", {
           description: error instanceof Error ? error.message : "Unknown error occurred",
         });
