@@ -123,7 +123,7 @@ export default function Home() {
                 <CardFooter>
                   <Link href="/despatch/invoice-view" className="w-full">
                     <Button variant="outline" className="w-full">
-                      Send Despatch
+                      Retrieve Invoice
                     </Button>
                   </Link>
                 </CardFooter>
