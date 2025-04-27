@@ -81,8 +81,9 @@ export async function createInvoice(invoice: Invoice): Promise<string> {
             throw new Error(errorData.error || "Failed to create invoice")
         }
 
-        console.log("Invoice created successfully:", response.json())
-        return (await response.json()).invoiceId
+        const data = await response.json()
+        console.log("Invoice created successfully:", data)
+        return data.invoiceId
     } catch (error) {
         console.error("Error creating invoice:", error)
         throw error
@@ -92,15 +93,15 @@ export async function createInvoice(invoice: Invoice): Promise<string> {
 /**
  * Retrieve an invoice from the SUSHI API
  * @param invoiceId - The invoice ID
- * @returns Promise with invoice ID or error
+ * @returns Promise with invoice data or error
  */
 export async function retrieveInvoice(invoiceId: string): Promise<string> {
     try {  
         const response = await fetch(`${INVOICE_API_BASE_URL}/v1/invoices/${invoiceId}`, {
             method: "GET",
             headers: {
-            "Content-Type": "application/json",
-            ...getInvoiceAuthHeaders(),
+                "Content-Type": "application/json",
+                ...getInvoiceAuthHeaders(),
             },
         })
     
@@ -108,10 +109,16 @@ export async function retrieveInvoice(invoiceId: string): Promise<string> {
             const errorData = await response.json()
             throw new Error(errorData.error || "Failed to retrieve invoice")
         }
-    
-        return await response.json()
+
+        const responseText = await response.text()
+        if (response.headers.get("Content-Type")?.includes("application/xml")) {
+            console.log("Invoice retrieved successfully (XML):", responseText)
+            return responseText
+        } else {
+            throw new Error("Unexpected response format: Expected XML")
+        }
     } catch (error) {
-        console.error("Error creating invoice:", error)
+        console.error("Error retrieving invoice:", error)
         throw error
     }
 }
