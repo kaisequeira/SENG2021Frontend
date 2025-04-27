@@ -37,6 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       try {
         const invoiceResponse = await loginToInvoiceApi()
+        console.log("Invoice API Token:", invoiceResponse.token)
         setInvoiceApiToken(invoiceResponse.token)
       } catch (error) {
         toast.error("Error logging in to Invoice API", {
