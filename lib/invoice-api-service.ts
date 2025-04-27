@@ -49,7 +49,7 @@ export async function loginToInvoiceApi(): Promise<AuthTokenResponse> {
       })
   
       if (!response.ok) {
-        const errorData = await response.json()
+        const errorData = (await response.json()).data
         throw new Error(errorData.error || "Failed to login to Invoice API")
       }
   
