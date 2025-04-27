@@ -7,9 +7,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
-import { sendDespatch } from "@/lib/api-service"
+import { getDespatchAdvice, sendDespatch } from "@/lib/api-service"
 import { Loader2, Send } from "lucide-react"
 import { useState } from "react"
+import { mapDespatchAdviceToInvoice } from "@/lib/invoice-utils"
+import { createInvoice } from "@/lib/invoice-api-service"
 
 /**
  * SendDespatchPage component for sending despatches from the warehouse.
@@ -37,6 +39,21 @@ export default function SendDespatchPage() {
       toast.success("Despatch Sent", {
         description: result,
       })
+
+      try {
+        const url = await getDespatchAdvice(despatchId);
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error("Failed to fetch document content");
+        }
+        const text = await response.text();
+        const invoice = mapDespatchAdviceToInvoice(text)
+        await createInvoice(invoice);
+      } catch (error) {
+        toast.error("Error creating invoice", {
+          description: error instanceof Error ? error.message : "Unknown error occurred",
+        });
+      }
 
       // Reset form
       setDespatchId("")
