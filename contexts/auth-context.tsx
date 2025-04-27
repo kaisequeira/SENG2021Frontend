@@ -1,10 +1,11 @@
 "use client"
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
-import { isAuthenticated, login, logout, register, setAuthToken, removeAuthToken } from "../lib/auth"
+import { isAuthenticated, login, logout, register, setAuthToken, removeAuthToken, removeInvoiceApiToken, setInvoiceApiToken } from "../lib/auth"
 import type { LoginCredentials, RegisterCredentials } from "../lib/auth"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
+import { loginToInvoiceApi } from "@/lib/invoice-api-service"
 
 interface AuthContextType {
   isAuthenticated: boolean
@@ -33,6 +34,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const response = await login(credentials)
       setAuthToken(response.token)
       setIsAuth(true)
+
+      try {
+        const invoiceResponse = await loginToInvoiceApi()
+        setInvoiceApiToken(invoiceResponse.token)
+      } catch (error) {
+        toast.error("Error logging in to Invoice API", {
+          description: error instanceof Error ? error.message : "Unknown error occurred",
+        })
+      }
+
       router.push("/dashboard")
       toast.success("Logged in successfully")
     } catch (error) {
@@ -48,12 +59,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsLoading(true)
       await logout()
       removeAuthToken()
+      removeInvoiceApiToken()
       setIsAuth(false)
       router.push("/login")
       toast.success("Logged out successfully")
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to logout")
       removeAuthToken()
+      removeInvoiceApiToken()
       setIsAuth(false)
       router.push("/login")
     } finally {

@@ -119,6 +119,7 @@ export async function logout(): Promise<{ message: string }> {
 
     // Clear the token from localStorage
     removeAuthToken()
+    removeInvoiceApiToken()
 
     return await response.json()
   } catch (error) {
@@ -163,4 +164,34 @@ export function removeAuthToken(): void {
  */
 export function isAuthenticated(): boolean {
   return !!getAuthToken()
+}
+
+/**
+ * 
+ * @param token 
+ */
+export function setInvoiceApiToken(token: string): void {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("invoice_api_token", token)
+  }
+}
+
+/**
+ * Retrieves the invoice API token from localStorage
+ * @returns The invoice API token or null
+ */
+export function getInvoiceApiToken(): string | null {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("invoice_api_token")
+  }
+  return null
+}
+
+/**
+ * Removes the invoice API token from localStorage
+ */
+export function removeInvoiceApiToken(): void {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("invoice_api_token")
+  }
 }
