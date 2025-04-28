@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { FileText, Package, Truck, ClipboardList, BarChart3, LogIn, UserPlus } from "lucide-react"
+import { FileText, Package, Truck, ClipboardList, BarChart3, LogIn, UserPlus, Sparkles } from "lucide-react"
 import Link from "next/link"
 import { useAuth } from "@/contexts/auth-context"
 
@@ -112,17 +112,27 @@ export default function Home() {
                 </CardFooter>
               </Card>
 
-              <Card>
+              <Card className="relative border-2 border-primary/50 shadow-lg">
+                <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground rounded-full p-1 shadow-md">
+                  <span className="sr-only">Special feature</span>
+                  <Sparkles className="h-4 w-4" />
+                </div>
+
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Retrieve Invoice</CardTitle>
-                  <FileText className="h-4 w-4 text-muted-foreground" />
+                  <div className="flex items-center gap-2">
+                    <CardTitle className="text-sm font-medium">Retrieve Invoice</CardTitle>
+                    <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
+                      Integration
+                    </span>
+                  </div>
+                  <FileText className="h-4 w-4 text-primary" />
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">Integration with the SUSHI SENG2021 invoice API.</p>
                 </CardContent>
                 <CardFooter>
                   <Link href="/despatch/invoice-view" className="w-full">
-                    <Button variant="outline" className="w-full">
+                    <Button variant="default" className="w-full bg-primary hover:bg-primary/90">
                       Retrieve Invoice
                     </Button>
                   </Link>
