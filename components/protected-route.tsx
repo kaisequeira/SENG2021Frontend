@@ -26,7 +26,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
 
     // Redirect to dashboard if already authenticated and trying to access auth pages
     if (!isLoading && isAuthenticated && isAuthPage) {
-      router.push("/dashboard")
+      router.push("/")
     }
   }, [isAuthenticated, isLoading, router, pathname])
 
