@@ -212,7 +212,7 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="col-span-1">
+        <Card className="col-span-1 h-">
           <CardHeader>
             <CardTitle>Recent Despatches</CardTitle>
             <CardDescription>Latest despatch activities</CardDescription>
@@ -223,27 +223,29 @@ export default function DashboardPage() {
                 <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
               </div>
             ) : (
-            <div className="space-y-4">
-              {recentDespatches.map((despatch) => (
-                <div key={despatch.Despatch_ID} className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium">{despatch.Despatch_ID}</p>
-                    <p className="text-xs text-muted-foreground">{new Date(despatch.Issue_Date).toLocaleDateString()}</p>
-                  </div>
-                  <div
-                    className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      despatch.Status === "Delivered"
-                        ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100"
-                        : despatch.Status === "Cancelled"
-                          ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100"
-                          : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100"
-                    }`}
-                  >
-                    {despatch.Status}
-                  </div>
-                </div>
-              ))}
-            </div>
+              <div className="h-[300px] overflow-y-auto pr-2 space-y-4">
+                {recentDespatches
+                  .sort((a, b) => new Date(b.Issue_Date).getTime() - new Date(a.Issue_Date).getTime())
+                  .map((despatch) => (
+                    <div key={despatch.Despatch_ID} className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium">{despatch.Despatch_ID}</p>
+                        <p className="text-xs text-muted-foreground">{new Date(despatch.Issue_Date).toLocaleDateString()}</p>
+                      </div>
+                      <div
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          despatch.Status === "Delivered"
+                            ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100"
+                            : despatch.Status === "Cancelled"
+                            ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100"
+                            : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100"
+                        }`}
+                      >
+                        {despatch.Status}
+                      </div>
+                    </div>
+                  ))}
+              </div>
           )}
           </CardContent>
         </Card>

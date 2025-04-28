@@ -47,7 +47,7 @@ export default function ViewDespatchPage() {
 
   return (
     <div className="container py-10">
-      <h1 className="text-3xl font-bold mb-6">View Despatch Advice</h1>
+      <h1 className="text-3xl font-bold mb-6">Retrieve Invoice</h1>
 
       <div className="grid gap-6 mb-6">
         <Card>
@@ -58,18 +58,18 @@ export default function ViewDespatchPage() {
               <ul className="list-disc list-inside mt-2">
                 <li>This feature is powered by the SUSHI SENG2021 API.</li>
                 <li>An invoice can only be generated and retrieved after sending a despatch.</li>
-                <li>If you are using Chrome, ensure the "Insecure Content" setting is set to "Allowed" enable access to the SUSHI API (you may have to log in again to retrieve a new token).</li>
+                <li>If you are using Chrome, ensure the "Insecure Content" setting is set to "Allowed" to enable access to the SUSHI API (you may have to log in again to retrieve a new token).</li>
               </ul>
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="despatch-id">Invoice ID</Label>
+                <Label htmlFor="invoice-id">Invoice ID</Label>
                 <div className="flex gap-2">
                   <Input
-                    id="despatch-id"
-                    placeholder="Enter Despatch ID"
+                    id="invoice-id"
+                    placeholder="Enter Invoice ID"
                     value={invoiceId}
                     onChange={(e) => setInvoiceId(e.target.value)}
                     required
