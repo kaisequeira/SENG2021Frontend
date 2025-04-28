@@ -84,7 +84,16 @@ export default function SendDespatchPage() {
       <Card>
         <CardHeader>
           <CardTitle>Send Despatch from Warehouse</CardTitle>
-          <CardDescription>Enter the Despatch ID to mark it as sent and update inventory</CardDescription>
+          <CardDescription>
+            Enter the Despatch ID to mark it as sent and update inventory. Integration with the SUSHI invoice API requires the following steps:
+            <ol className="list-decimal list-inside mt-2">
+              <li>In site settings, set the "Insecure Content" field to "Allowed".</li>
+              <li>Log in again to receive the SUSHI invoice token.</li>
+              <li>
+                After sending a despatch advice, copy the returned invoice ID to retrieve the invoice at a later date.
+              </li>
+            </ol>
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">

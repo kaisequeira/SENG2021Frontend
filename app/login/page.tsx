@@ -8,8 +8,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Loader2, Mail, Lock } from "lucide-react"
+import { Loader2, Mail, Lock, AlertTriangle } from "lucide-react"
 import Link from "next/link"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 export default function LoginPage() {
   const { login } = useAuth()
@@ -42,6 +43,15 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          <Alert className="mb-6 border-amber-500 bg-amber-50 text-amber-800">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle className="text-amber-800 font-medium">Important: Browser Setting Required</AlertTitle>
+            <AlertDescription className="text-amber-700">
+              You must allow the "Insecure Content" setting in this site to enable integration with the SUSHI API. You
+              will have to log in again after this setting is updated to receive a new token. If you wish to proceed
+              using only the Crunchie Despatch API, you do not need to do this.
+            </AlertDescription>
+          </Alert>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && <div className="p-3 text-sm text-white bg-destructive rounded-md">{error}</div>}
             <div className="space-y-2">
